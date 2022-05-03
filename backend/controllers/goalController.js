@@ -10,7 +10,8 @@ const getGoals = (req, res) => {
 // @desc Set goal
 // @route POST /api/goals
 // @access Private
-const postGoal = (req, res) => {
+const setGoal = (req, res) => {
+  console.log(req.body);
   res.status(200).json({
     message: `Create(Set) goal in contoller`,
   });
@@ -35,7 +36,7 @@ const deleteGoal = (req, res) => {
 };
 module.exports = {
   getGoals,
-  postGoal,
+  setGoal,
   updateGoal,
   deleteGoal,
 };
