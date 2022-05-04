@@ -11,7 +11,16 @@ const getGoals = (req, res) => {
 // @route POST /api/goals
 // @access Private
 const setGoal = (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
+
+  if (!req.body.text) {
+    console.log(req.body);
+    console.log("true");
+    // res.status(400).json({ error: "Please add a text field" });
+    res.status(400);
+    throw new Error("Please add a text field");
+  }
+
   res.status(200).json({
     message: `Create(Set) goal in contoller`,
   });

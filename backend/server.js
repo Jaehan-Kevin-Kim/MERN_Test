@@ -1,5 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv").config();
+const { errorHandler } = require("./middleware/errorMiddleware");
 const port = process.env.PORT || 5001;
 const app = express();
 const goalRouter = require("./routes/goalRoutes");
@@ -8,6 +9,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/api/goals", goalRouter);
+
+app.use(errorHandler);
 
 // app.get("/api/goals", (req, res) => {
 //   //   res.send("Get goals");
