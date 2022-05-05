@@ -10,8 +10,8 @@ const {
 router.route("/").get(getGoals).post(setGoal);
 // router.route("/:id").put(updateGoal).delete(deleteGoal);
 
-router.route("/:id").put(updateGoal);
-router.route("/:name").delete(deleteGoal);
+router.route("/:id").put(updateGoal).delete(deleteGoal);
+// router.route("/:name").delete(deleteGoal);
 
 //GET /api/goals
 // router.get("/", getGoals);
