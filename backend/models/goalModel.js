@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const goalSchema = mongoose.Schema(
   {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User", // 위 ObjectId를 가지고 있는 model을 참조 하기 위해 해당 값을 가지고 있는 model 이름을 여기에 적어 주기
+    },
     // text: String, // 이렇게 간단히 적어 줄 수도 있고, 아래와 같이 여러가지 option과 함께 적어줄 수 있음
     text: {
       type: String,

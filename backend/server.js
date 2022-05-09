@@ -7,12 +7,14 @@ const port = process.env.PORT || 5001;
 
 const app = express();
 const goalRouter = require("./routes/goalRoutes");
+const userRouter = require("./routes/userRoutes");
 
 connectDB();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+app.use("/api/users", userRouter);
 app.use("/api/goals", goalRouter);
 
 app.use(errorHandler);
