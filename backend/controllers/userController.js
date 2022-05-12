@@ -79,19 +79,24 @@ const loginUser = asyncHandler(async (req, res) => {
 
 // @desc Get user user
 // @route GET /api/users/me
-// @access Public
+// @access Private
 const getMe = asyncHandler(async (req, res) => {
-  res.json({
-    message: "User data display",
+  console.log(req.user);
+  const { _id, name, email } = await User.findById(req.user.id);
+
+  res.status(200).json({
+    id: _id,
+    name,
+    email,
   });
 });
 
 // Generate JWT (JWT 생성하는 method)
-// const generateToken = (id) => {
-//   return jwt.sign({ id }, process.env.JWT_SECRET, {
-//     expiresIn: "30d",
-//   });
-// };
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: "30d",
+  });
+};
 
 module.exports = {
   registerUser,

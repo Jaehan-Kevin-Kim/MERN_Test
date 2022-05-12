@@ -19,6 +19,7 @@ const protect = asyncHandler(async (req, res, next) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       // Get user from the token
+
       req.user = await User.findById(decoded.id).select("-password"); //.select('-password') 를 해 주는 이유는 비록 hashed password이긴 하지만, password를 제외 한 값을 가져오기 위해서 추가로 넣어준 부분 코드임.
 
       next();
