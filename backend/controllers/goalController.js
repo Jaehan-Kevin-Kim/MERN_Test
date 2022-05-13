@@ -6,7 +6,7 @@ const Goal = require("../models/goalModel");
 // @route GET /api/goals
 // @access Private
 const getGoals = asyncHandler(async (req, res) => {
-  const goals = await Goal.find(); // .find()는 모든 값을 찾는 method
+  const goals = await Goal.find({ user: req.user.id }); // .find()는 모든 값을 찾는 method
   res.status(200).json(goals);
 
   // res.status(200).json({
@@ -29,6 +29,7 @@ const setGoal = asyncHandler(async (req, res) => {
   // 아래는 goalCollection 안에 하나의 값을 생성 하는 코드
   const goal = await Goal.create({
     text: req.body.text,
+    user: req.user.id,
   });
 
   res.status(200).json(goal);
