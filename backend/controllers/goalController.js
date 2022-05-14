@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 
 const Goal = require("../models/goalModel");
+const User = require("../models/userModel");
 
 // @desc Get goals
 // @route GET /api/goals
@@ -46,6 +47,20 @@ const updateGoal = asyncHandler(async (req, res) => {
     throw new Error("Goal not found");
   }
 
+  const user = await User.findById(req.user.id); // user 정보 가져오기
+
+  // Check for user
+  if (!user) {
+    res.status(401);
+    throw new Error("User not found");
+  }
+
+  // Make sure the logged in user matches the goal user
+  if (goal.user.toString() !== user.id) {
+    res.status(401);
+    throw new Error("User not authorized");
+  }
+
   const updatedGoal = await Goal.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     // 위 new: true 옵션은 만약 해당 id를 가진 goal이 없는 경우, 자동으로 생성해주는 옵션임.
@@ -64,6 +79,21 @@ const deleteGoal = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Goal not found");
   }
+
+  const user = await User.findById(req.user.id); // user 정보 가져오기
+
+  // Check for user
+  if (!user) {
+    res.status(401);
+    throw new Error("User not found");
+  }
+
+  // Make sure the logged in user matches the goal user
+  if (goal.user.toString() !== user.id) {
+    res.status(401);
+    throw new Error("User not authorized");
+  }
+
   await goal.remove();
 
   res.status(200).json({ id: req.params.id });
