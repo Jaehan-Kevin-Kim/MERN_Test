@@ -8,6 +8,7 @@ const User = require("../models/userModel");
 // @access Private
 const getGoals = asyncHandler(async (req, res) => {
   const goals = await Goal.find({ user: req.user.id }); // .find()는 모든 값을 찾는 method
+  // res.status(200).json(goals);
   res.status(200).json(goals);
 
   // res.status(200).json({
