@@ -91,6 +91,18 @@ const getMe = asyncHandler(async (req, res) => {
   });
 });
 
+const getAllUsers = asyncHandler(async (req, res) => {
+  const users = await User.find();
+  if (users) {
+    res.status(200).json(users);
+  }
+
+  if (!users) {
+    res.status(400);
+    throw new Error("No User");
+  }
+});
+
 // Generate JWT (JWT 생성하는 method)
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -102,4 +114,5 @@ module.exports = {
   registerUser,
   loginUser,
   getMe,
+  getAllUsers,
 };

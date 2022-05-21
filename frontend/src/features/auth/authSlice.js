@@ -27,6 +27,28 @@ export const register = createAsyncThunk(
   },
 );
 
+// Login user
+export const login = createAsyncThunk(
+  "auth/login",
+  async (loginInfo, thunkAPI) => {
+    try {
+      return await authService.login(loginInfo);
+    } catch (error) {
+      const message =
+        error.response?.data?.message || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  },
+);
+
+// Logout user
+export const logout = createAsyncThunk(
+  "auth/logout", // auth Reducer안에 logout 동작 임.
+  async () => {
+    await authService.logout();
+  },
+);
+
 export const authSlice = createSlice({
   name: "auth", // slice이름
   initialState,
@@ -41,6 +63,7 @@ export const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    // 여기 기재되는 값은 전부 asynchronous 동작일 예정
     // 비동기 / thunk function들이 여기 기재 됨.
     builder
       .addCase(register.pending, (state) => {
@@ -60,8 +83,27 @@ export const authSlice = createSlice({
         state.isError = true;
         state.message = action.payload; // 이거는 역시 위 register method에서 오류 발생 시 catch 구문에서 thunkAPI.rejectWithValue(message)로 message를 리턴 해 주었기 때문에 action.payload의 값이 해당 message의 값이 됨.
         state.user = null;
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.user = null;
+      })
+      .addCase(login.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.user = action.payload;
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.isError = true;
+        state.message = action.payload;
+        state.user = null;
       });
-  }, // 여기 기재되는 값은 전부 asynchronous 동작일 예정
+  },
 });
 
 // 위와 같이 authSlice의 reducers에 있는 값들을 아래와 같이 기재 해 줘야 함.
