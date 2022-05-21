@@ -8,6 +8,7 @@ const User = require("../models/userModel");
 // @access Private
 const getGoals = asyncHandler(async (req, res) => {
   const goals = await Goal.find({ user: req.user.id }); // .find()는 모든 값을 찾는 method
+  // const goals = await Goal.find({ user: req.user.id }).populate("user"); // .populate("모델이름")을 해 주면 해당 모델이름에 있는 모든 값들이 펼쳐져서 출력 됨. 그렇게 하지 않고 위 처럼 작성 하면 해당 model의 id만 출력 됨.
   // res.status(200).json(goals);
   res.status(200).json(goals);
 
