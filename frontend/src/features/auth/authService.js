@@ -4,6 +4,8 @@ const API_URL = "api/users/";
 
 // Register user
 const register = async (userData) => {
+  console.log(`userData: ${userData}`);
+
   const response = await axios.post(API_URL, userData);
 
   if (response.data) {

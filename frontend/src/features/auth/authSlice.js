@@ -74,7 +74,7 @@ export const authSlice = createSlice({
         // 성공 시
         // 성공 시에는 돌려 받는 data가 있기 때문에 action을 추가 해 주기
         state.isLoading = false;
-        state.isSuccess = true;
+        state.isSuccexss = true;
         state.user = action.payload; // 해당 action.payload는 위 register method에서 성공 시 return await authService.register(user) 을 통해 user를 return 해줬음. 따라서 action.payload의 값은 user임.
       })
       .addCase(register.rejected, (state, action) => {
