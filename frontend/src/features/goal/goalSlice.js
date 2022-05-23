@@ -14,11 +14,27 @@ export const createGoal = createAsyncThunk(
   "goals/create", // 이게 action 이름임.
   async (goalData, thunkAPI) => {
     try {
-      console.log(`goalData: ${goalData}`);
       //authSlice에서 register와 login은 token을 보낼 필요가 없었음 (요청 시 생성되는 형태였음. 하지만 여기서는 token을 보내 줘야 함.)
       const token = thunkAPI.getState().auth.user.token; //thunkAPI object의 getState()를 통해 해당 program에 존재하는 어떤 state에든 접속이 가능 함. 따라서 auth state로 접근 해서 해당 state의 user.token값을 읽어오기
       return await goalService.createGoal(goalData, token);
     } catch (error) {
+      const message =
+        error.response?.data?.message || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  },
+);
+
+//Get user goals
+export const getGoals = createAsyncThunk(
+  "goals/getAll",
+  async (_, thunkAPI) => {
+    /// 여기선 thunkAPI를 사용해야 하는데, thunkAPI는 무조건 두번째 인자이기 때문에, (_, thunkAPI) 이런식으로 parameter로 설정해줘야 thunkAPI가 정상적으로 동작함 (그렇게 하지 않으며, 우너하는 값을 못 가져옴.)
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await goalService.getGoals(token);
+    } catch (error) {
+      console.log(error);
       const message =
         error.response?.data?.message || error.message || error.toString();
       return thunkAPI.rejectWithValue(message);
@@ -55,6 +71,21 @@ export const goalsSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = false;
         state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(getGoals.pending, (state) => {
+        state.isLoading = true;
+        state.isSuccess = false;
+      })
+      .addCase(getGoals.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.goals = action.payload;
+      })
+      .addCase(getGoals.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = false;
+        state.rejected = true;
         state.message = action.payload;
       });
   },
