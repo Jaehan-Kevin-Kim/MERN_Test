@@ -42,6 +42,22 @@ export const getGoals = createAsyncThunk(
   },
 );
 
+// Delete user goal
+export const deleteGoal = createAsyncThunk(
+  "goals/delete",
+  async (id, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await goalService.deleteGoal(id, token);
+    } catch (error) {
+      console.log(error);
+      const message =
+        error.response?.data?.message || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  },
+);
+
 export const goalsSlice = createSlice({
   name: "goal",
   initialState,
@@ -58,6 +74,7 @@ export const goalsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(createGoal.pending, (state) => {
+        ///createGoal extra reducers
         state.isLoading = true;
         state.isSuccess = false;
       })
@@ -74,6 +91,7 @@ export const goalsSlice = createSlice({
         state.message = action.payload;
       })
       .addCase(getGoals.pending, (state) => {
+        ///getGoals extra reducers
         state.isLoading = true;
         state.isSuccess = false;
       })
@@ -86,6 +104,25 @@ export const goalsSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = false;
         state.rejected = true;
+        state.message = action.payload;
+      })
+      .addCase(deleteGoal.pending, (state) => {
+        ///deleteGoal extra reducers
+        state.isLoading = true;
+        state.isSuccess = false;
+      })
+      .addCase(deleteGoal.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isError = false;
+        state.goals = state.goals.filter(
+          (goal) => goal._id !== action.payload.id,
+        );
+      })
+      .addCase(deleteGoal.rejected, (state, action) => {
+        state.isError = true;
+        state.isLoading = false;
+        state.isSuccess = false;
         state.message = action.payload;
       });
   },
